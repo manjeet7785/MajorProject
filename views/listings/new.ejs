@@ -1,0 +1,52 @@
+<% layout("/layouts/boilerplate") %>
+
+  <body>
+    <div class="row">
+      <div class="col-8 offset-2">
+        <h3>Create List</h3>
+        <form method="POST" action="/listings">
+
+          <div class="mb-3">
+            <label for="listingTitle" class="form-label">Title</label>
+            <input name="listing[title]" id="listingTitle" placeholder="Enter title" type="text" class="form-control"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="listingDescription" class="form-label">Description</label>
+            <textarea name="listing[description]" id="listingDescription" placeholder="Enter description" type="text"
+              class="form-control" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="listingImage" class="form-label">Image Link</label>
+            <input name="listing[image]" id="listingImage" placeholder="Enter Your URL or Link" type="text"
+              class="form-control">
+          </div>
+
+          <div class="row">
+            <div class="mb-3 col-md-4">
+              <label for="listingPrice" class="form-label">Price</label>
+              <input name="listing[price]" id="listingPrice" placeholder="Enter price" type="number"
+                class="form-control" required>
+            </div>
+
+            <div class="mb-3 col-md-4">
+              <label for="listingCountry" class="form-label">Country</label>
+              <input name="listing[country]" id="listingCountry" placeholder="Enter Country" type="text"
+                class="form-control" required>
+            </div>
+
+            <div class="mb-3 col-md-4">
+              <label for="listingLocation" class="form-label">Location</label>
+              <input name="listing[location]" id="listingLocation" placeholder="Enter location" type="text"
+                class="form-control" required>
+            </div>
+          </div>
+
+          <button style="background-color: orange; color: black; font-size: 1.5rem;"
+            class=" btn btn-dark add-btn mt-3">Add</button>
+        </form>
+      </div>
+    </div>
+  </body>

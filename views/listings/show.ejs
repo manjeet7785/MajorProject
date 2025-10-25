@@ -1,0 +1,30 @@
+<% layout("/layouts/boilerplate") %>
+
+  <body>
+    <h3>Listening Details</h3>
+    <ul>
+      <li>
+        <%= show.title %>
+      </li>
+      <li>
+        <%= show.description %>
+      </li>
+      <li>
+        <%= show.price.toLocaleString("en-IN") %>
+      </li>
+      <li>
+        <%= show.location %>
+      </li>
+      <li>
+        <%= show.country %>
+      </li>
+
+    </ul>
+    <br>
+    <a href="/listings/<%= show._id %>/edit">Edit the Listening</a>
+    <br>
+    <br>
+    <form method="POST" action="/listings/<%=show._id%>?_method=DELETE">
+      <button>Delete This Learning</button>
+    </form>
+  </body>
