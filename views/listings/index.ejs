@@ -1,5 +1,6 @@
 <% layout("/layouts/boilerplate") %>
 
+
   <body>
     <h3>All Listening</h3>
 
@@ -7,8 +8,9 @@
 
 
       <% for(let listing of Alllist) { %>
-        <a class="listlink" href="/listing/<%= listing._id %> ">
-          <div class="card" style="width: 20rem;">
+
+        <div class="card" style="width: 20rem;">
+          <a class="listlink" href="/listings/<%= listing._id %> ">
             <img src="<%= listing.image.url %>" class=" card-img-top " style="height: 20rem;" alt="...">
 
             <div class="card-body">
@@ -20,8 +22,9 @@
                 ₹<%= listing.price.toLocaleString("en-IN") %> /night
               </p>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
+
         <% } %>
 
     </div>

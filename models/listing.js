@@ -1,4 +1,5 @@
-const mongooes = require("mongoose")
+const mongooes = require("mongoose");
+const reviews = require("./reviews");
 const Schema = mongooes.Schema;
 
 const listeningSchema = new Schema({
@@ -8,17 +9,35 @@ const listeningSchema = new Schema({
   },
   description: String,
   image: {
+    // type:String 
     type: {
       url: String,
       filename: String,
     },
-    default: "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+    default: {
+      url: "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+      filename: "listing_placeholder" // या कोई भी डिफ़ॉल्ट filename
+    },
     Set: (v) => v === " " ? "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170" : v,
   },
   price: Number,
   location: String,
   country: String,
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    }
+  ]
 });
+
+
+listeningSchema.post("findOneAndDelete", async (show) => {
+  if (show) {
+    await reviews.deleteMany({ _id: { $in: show.reviews } })
+  }
+
+})
 
 const List = mongooes.model("List", listeningSchema)
 module.exports = List;

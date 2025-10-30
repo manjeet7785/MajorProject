@@ -2,9 +2,17 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const List = require("./models/listing.js")
+const Review = require("./models/reviews.js")
 const path = require("path")
 const methodOver = require("method-override")
 const ejsmate = require("ejs-mate")
+const wrapAsync = require("./utilies/wrapAsync.js")
+const ExpressError = require("./utilies/ExpressError.js")
+const listings = require("./routes/listings.js")
+const reviewsRoute = require("./routes/router.js")
+const session = require("express-session")
+const flash = require("connect-flash");
+
 
 const url = "mongodb+srv://admin:Raja1234%40%40@manjeet.jihoesr.mongodb.net/major";
 
@@ -28,85 +36,53 @@ app.use(methodOver("_method"));
 app.engine("ejs", ejsmate)
 app.use(express.static(path.join(__dirname, "/public")))
 
-app.get("/", (req, res) => {
-  res.send("Hii I am")
-});
 
-//index Route
-app.get("/listing", async (req, res) => {
-  const Alllist = await List.find({});   //List ko pass kiya hun  models ke listings se 
+const sessionOptions = {
+  secret: "mysecret ye kuch bhi likh skhte",
+  resave: false,
+  saveUninitialized: true,
+  Cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+}
 
-  res.render("listings/index", { Alllist });
+app.use(session(sessionOptions))  // now we check the session is working or not so simply go with application and cookies
+app.use(flash()) // routes se phle flash ko use krna hai kyu route pya hi kamm krna hai
 
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 })
 
-//show Route
-app.get("/listing/:id", async (req, res) => {
-  let { id } = req.params;
-  const show = await List.findById(id);    //List ko pass kiya hun  models ke listings se
-  res.render("listings/show", { show });
-});
+app.use("/listings", listings)
+app.use("/listings/:id/reviews", reviewsRoute)
 
-//New Route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new")
+// app.all("*", (req, res, next) => {
+//   next(new ExpressError(404, "Page Not Found!"));
+// });
+
+// This middleware catches any request that hasn't been handled by routes above it.
+// app.use((req, res, next) => {
+//   next(new ExpressError(404, "Page Not Found!"));
+// });
+// custom error handle isko create ki help se kr rhe hai 
+
+// app.use((err, req, res, next) => {
+//   // res.send("Something went Wrong!")
+//   let { statusCode, message } = err;
+//   res.status(statusCode).send(message);
+// })
+
+app.use((err, req, res, next) => {
+  // Provide default values for safety
+  let { statusCode = 500, message = "Something Went Wrong!" } = err;
+  res.render("error.ejs", { err })
 })
 
-//Create Route
-app.post("/listings", (req, res) => {
-  let create = req.body.listing;
-  // console.log(create);
-
-  // ab window me add krne ke liye list 
-  const imageUrl = create.image;
-  create.image = {
-    url: imageUrl,
-    filename: 'placeholder-filename' // Provide a temporary filename
-  };
-  const newList = new List(req.body.listing);
-  newList.save();
-  res.redirect("/listing")  //isse list ko add kiya hun list me 
-  // console.log();
-})
-
-//Edit Route
-app.get("/listings/:id/edit", async (req, res) => {
-  let { id } = req.params;
-  const listing = await List.findById(id);
-  res.render("listings/edit", { listing });
-})
-
-//Update Route
-app.put("/listings/:id", async (req, res) => {
-  let { id } = req.params;
-
-  // 1. Get the data from the form
-  let updatedListing = req.body.listing;
-
-  // 2. Re-structure the image field to match the Schema (object with url and filename)
-  // The form only sends the URL string, so we need to convert it.
-  if (updatedListing.image) {
-    updatedListing.image = {
-      url: updatedListing.image,
-      filename: 'placeholder-filename' // Use a temporary/placeholder filename
-    };
-  }
-
-  // 3. Perform the update
-  await List.findByIdAndUpdate(id, updatedListing);
-
-  res.redirect(`/listing/${id}`);
-})
-
-//Delete Route
-app.delete("/listings/:id", async (req, res) => {
-  let { id } = req.params;
-  let deleteList = await List.findByIdAndDelete(id)
-  res.redirect("/listing")
-  console.log(deleteList);
-
-})
-
+main();
 // app.get("/listening", async (req, res) => {
 //   let sample = new List({
 //     title: "My New Home",
@@ -121,4 +97,4 @@ app.delete("/listings/:id", async (req, res) => {
 
 // })
 
-main(); 
+// main(); 

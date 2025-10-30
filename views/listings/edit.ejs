@@ -1,34 +1,51 @@
 <% layout("/layouts/boilerplate") %>
 
-  <body>
-        <h3>Edit Listing</h3>
-        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
-             
-              <label>Title</label>
-              <input           name="listing[title]"           value="<%= listing.title %>"           type="text"      
-         >
-              <br>
+  <div class="row mt-4">
+    <div class="col-8 offset-2">
+      <h3>Edit Listing</h3>
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate>
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input name="listing[title]" class="form-control" value="<%= listing.title %>" type="text" required />
+          <div class="invalid-feedback">Please enter a title.</div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea id="description" name="listing[description]" class="form-control" required>
+<%= listing.description %></textarea>
+          <div class="invalid-feedback">Please enter a description.</div>
+        </div>
 
-              <label>Description</label>
-              <textarea name="listing[description]"><%= listing.description %></textarea>
-              <br>
+        <div class="mb-3">
+          <label for="image" class="form-label">Image URL</label>
+          <input id="image" name="listing[image]" class="form-control" value="<%= listing.image.url %>" type="text" />
+          <div class="invalid-feedback">Please enter a valid image URL.</div>
+        </div>
 
-              <label>Image URL</label>
-             <input name="listing[image]" value="<%= listing.image.url %>" type="text">
-              <br>
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label for="price" class="form-label">Price</label>
+            <input id="price" name="listing[price]" class="form-control" placeholder="1200" value="<%= listing.price %>"
+              type="number" required min="0" />
+            <div class="invalid-feedback">
+              Price must be a valid non-negative number.
+            </div>
+          </div>
+          <div class="mb-3 col-md-8">
+            <label for="country" class="form-label">Country</label>
+            <input id="country" name="listing[country]" class="form-control" value="<%= listing.country %>" type="text"
+              required />
+            <div class="invalid-feedback">Please enter a country name.</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input id="location" name="listing[location]" class="form-control" value="<%= listing.location %>" type="text"
+            required />
+          <div class="invalid-feedback">Please enter a location.</div>
+        </div>
 
-              <label>Price</label>
-              <input name="listing[price]" value="<%= listing.price %>" type="number">
-              <br>
-
-              <label>Country</label>
-              <input name="listing[country]" value="<%= listing.country %>" type="text">
-              <br>
-
-              <label>Location</label>
-              <input name="listing[location]" value="<%= listing.location %>" type="text">
-
-              <br>
-              <button>Update</button>
-            </form>
-  </body>
+        <button class="mb-3 mt-3 btn edit-btn btn-dark">Update</button>
+      </form>
+    </div>
+  </div>
