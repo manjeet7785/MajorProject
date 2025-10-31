@@ -183,3 +183,32 @@ border-radius: 1rem !important;
   color: white;
   cursor: pointer;
 }
+
+/* ================================================================================================================================= */
+
+
+.nav-action-link {
+  /* Background Color & Padding */
+  background-color: #ffc107;
+  /* A nice yellow/warning color */
+  padding: 8px 15px;
+  /* Top/Bottom and Left/Right Padding */
+  border-radius: 5px;
+  /* Rounded corners */
+  color: #212529 !important;
+  /* Text color for contrast, use !important to override Bootstrap's .nav-link color */
+
+  /* Font Bold */
+  font-weight: bold;
+
+  /* Hover Effect */
+  transition: background-color 0.3s ease;
+  /* Smooth transition for hover */
+}
+
+.nav-action-link:hover {
+  background-color: #e0a800;
+  /* A slightly darker yellow on hover */
+  color: #ffffff !important;
+  /* Change text color to white on hover */
+}

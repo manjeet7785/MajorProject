@@ -4,6 +4,9 @@ const wrapAsync = require("../utilies/wrapAsync.js")
 const ExpressError = require("../utilies/ExpressError.js")
 const List = require("../models/listing.js")
 const flash = require("connect-flash")
+const { isLoggedIn } = require("../middl.js")
+
+
 
 // const validateListing = (req, res, next) => {
 //   let { error } = listingSchema.validate(req.body);
@@ -29,7 +32,8 @@ router.get("/", wrapAsync(async (req, res) => {
 }))
 
 //New Route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
+
   res.render("listings/new")
 })
 
@@ -38,8 +42,8 @@ router.get("/:id", wrapAsync(async (req, res) => {
   let { id } = req.params;
   const show = await List.findById(id).populate("reviews");    //List ko pass kiya hun  models ke listings se // populate me review ke liye use kiya
   if (!show) {
-    req.flash("error", "Listing is not exit sorry")
-    res.redirect("/listings")
+    req.flash("error", "Listing is not exit sorry") //agar listing me product na ho to
+    return res.redirect("/listings");
   }
   res.render("listings/show", { show });
 }));
@@ -82,21 +86,27 @@ router.post("/", wrapAsync(async (req, res, next) => {
   const newList = new List(create);
 
   await newList.save();
-  req.flash("success", "New Listing Created!");
+  req.flash("success", "Listing created successfully.");
   res.redirect("/listings")
 }))
 
 
 //Edit Route
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   const listing = await List.findById(id);
-  req.flash("success", " Listing Edit!");
+
+
+  if (!listing) {
+    req.flash("error", "Listing not found."); //agar listing me product na ho to
+    return res.redirect("/listings");
+  }
+  req.flash("success", "You can now edit the listing.");
   res.render("listings/edit", { listing });
 })
 )
 //Update Route
-router.put("/:id", wrapAsync(async (req, res) => {
+router.put("/:id", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   // 1. Get the data from the form
   let updatedListing = req.body.listing;
@@ -112,15 +122,27 @@ router.put("/:id", wrapAsync(async (req, res) => {
 
   // 3. Perform the update
   await List.findByIdAndUpdate(id, updatedListing);
-  req.flash("success", " Listing Update!");
+  req.flash("success", "Listing updated successfully.");
+  if (!updatedListing) {
+    req.flash("error", "Listing not found.");//agar listing me product na ho to
+    return res.redirect("/listings");
+  }
+
+
   res.redirect(`/listings/${id}`);
 }))
 
 //Delete Route
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id", isLoggedIn, wrapAsync(async (req, res) => {
   let { id } = req.params;
   let deleteList = await List.findByIdAndDelete(id)
-  req.flash("success", "New Listing Delete!");
+  req.flash("success", "Listing deleted successfully.");
+
+  if (!deleteList) {
+    req.flash("error", "Listing not found.");
+    return res.redirect("/listings");
+  }
+
   res.redirect("/listings")
   // console.log(deleteList);
 

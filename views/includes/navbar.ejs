@@ -18,5 +18,21 @@
 
       </ul>
     </div>
+
+    <div class="navbar-nav ms-auto">
+
+      <% if(!currUser) { %>
+
+        <a href="/signup" class="nav-link nav-action-link">Sign up</a>
+        <a href="/login" class="nav-link nav-action-link">Log in</a>
+
+        <% } %>
+
+          <% if(currUser) { %>
+            <a href="/logout" class="nav-link nav-action-link">Log Out</a>
+
+            <% } %>
+    </div>
+
   </div>
 </nav>

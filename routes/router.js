@@ -4,12 +4,13 @@ const router = express.Router({ mergeParams: true });
 const List = require("../models/listing.js")
 const Review = require("../models/reviews.js")
 const wrapAsync = require("../utilies/wrapAsync.js")
-const ExpressError = require("../utilies/ExpressError.js")
+const ExpressError = require("../utilies/ExpressError.js");
+const { isLoggedIn } = require("../middl.js");
 
 
 //Reviews
 //Post Route of reviews
-router.post("/", wrapAsync(async (req, res) => {
+router.post("/", isLoggedIn, wrapAsync(async (req, res) => {
   console.log(req.params.id);
 
   let show = await List.findById(req.params.id);
@@ -19,13 +20,13 @@ router.post("/", wrapAsync(async (req, res) => {
 
   await newReviews.save();
   await show.save();
-
+  req.flash("success", "Review Added successfully.");
   res.redirect(`/listings/${show._id}`);
 }))
 
 //Delete Reviews  Route
 
-router.delete("/:reviewId",
+router.delete("/:reviewId", isLoggedIn,
   wrapAsync(async (req, res) => {
 
     let { id, reviewId } = req.params;
@@ -36,7 +37,9 @@ router.delete("/:reviewId",
     await Review.findByIdAndDelete(reviewId)
 
     // 3. Redirect to the show page using an absolute path
+    req.flash("success", "Listing Deleted successfully.");
     res.redirect(`/listings/${id}`)
+
   })
 );
 
