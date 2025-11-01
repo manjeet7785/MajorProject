@@ -29,10 +29,10 @@ const listeningSchema = new Schema({
       ref: "Review",
     }
   ],
-  Owner: {
+  owner: {
     type: Schema.Types.ObjectId,
     ref: "User"
-  }
+  },
 });
 
 
@@ -42,6 +42,6 @@ listeningSchema.post("findOneAndDelete", async (show) => {
   }
 
 })
-
+// db.users.dropIndex('username_1')
 const List = mongooes.model("List", listeningSchema)
 module.exports = List;

@@ -1,3 +1,5 @@
+const List = require("./models/listing")
+
 module.exports.isLoggedIn = (req, res, next) => {
   // console.log(req); //all data here
 
@@ -18,4 +20,26 @@ module.exports.saveRedirectUrl = (req, res, next) => {
     res.locals.redirectUrl = req.session.redirectUrl;
   }
   next();
+}
+
+module.exports.isOwner = async (req, res, next) => {
+  const { id } = req.params;
+  if (!id) {
+    req.flash("error", "Invalid request.");
+    return res.redirect("/listings");
+  }
+
+
+  next();
+}
+
+
+
+module.exports.isReviewAuthor = async (req, res, next) => {
+  let { reviewId } = req.params;
+  let listing = new List.findById(id);
+  if (!listing.owner.equals(res.locals.currUser._id)) {
+    req.flash("error", "You are not the author of the comment")
+    return res.redirect(`/listings/${id}`);
+  }
 }
