@@ -8,6 +8,11 @@ const { isLoggedIn, isOwner } = require("../middl.js")
 
 const ListingController = require("../controllers/Controler.js")
 
+const multer = require('multer')
+const { storage } = require("../Cloud.js")
+const upload = multer({ storage })
+
+
 // const validateListing = (req, res, next) => {
 //   let { error } = listingSchema.validate(req.body);
 //   if (error) {
@@ -56,7 +61,14 @@ router.get("/:id", wrapAsync(ListingController.renderShow));
 
 //error handling ke liye 
 //Create Route
-router.post("/", wrapAsync(ListingController.createRoute))
+
+router.post("/", isLoggedIn, upload.single('listing[image]'), wrapAsync(ListingController.createRoute))
+
+// router.post("/", upload.single('listing[image]'), (req, res) => {
+//   res.send(req.file)
+//   // console.log(req.file);
+
+// })
 
 
 //Edit Route
@@ -65,7 +77,7 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(ListingController.editRoute)
 
 
 //Update Route
-router.put("/:id", isLoggedIn, isOwner, wrapAsync(ListingController.UpdateRouter))
+router.put("/:id", isLoggedIn, isOwner, upload.single('listing[image]'), wrapAsync(ListingController.UpdateRouter))
 
 //Delete Route
 router.delete("/:id", isLoggedIn, wrapAsync(ListingController.DeleteRouter))

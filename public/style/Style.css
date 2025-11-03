@@ -11,6 +11,8 @@ body {
 
 .navbar {
   height: 5rem;
+  align-items: center;
+  justify-items: center;
   background-color: white;
 
 }
@@ -78,6 +80,24 @@ i:hover {
   font-weight: 600;
 }
 
+#filters {
+  display: flex;
+  /* align-items: center; */
+  gap: 3rem;
+
+  border-bottom: rgb(211, 201, 201) 1px solid;
+}
+
+#filters a {
+  text-decoration: none;
+  color: black;
+}
+
+#filters i {
+  font-weight: 500;
+  font-size: 1.5rem;
+  background-color: transparent;
+}
 
 /* =========================card */
 

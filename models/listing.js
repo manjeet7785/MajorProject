@@ -9,16 +9,8 @@ const listeningSchema = new Schema({
   },
   description: String,
   image: {
-    // type:String 
-    type: {
-      url: String,
-      filename: String,
-    },
-    default: {
-      url: "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      filename: "listing_placeholder" // या कोई भी डिफ़ॉल्ट filename
-    },
-    Set: (v) => v === " " ? "https://images.unsplash.com/photo-1761165308046-174a56e73525?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170" : v,
+    url: String,
+    filename: String,
   },
   price: Number,
   location: String,
@@ -45,3 +37,4 @@ listeningSchema.post("findOneAndDelete", async (show) => {
 // db.users.dropIndex('username_1')
 const List = mongooes.model("List", listeningSchema)
 module.exports = List;
+
