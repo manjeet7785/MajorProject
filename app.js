@@ -21,7 +21,8 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js")
 
 
-const url = "mongodb+srv://admin:Raja1234%40%40@manjeet.jihoesr.mongodb.net/major";
+const url = "mongodb+srv://AllData:Dil1234%40%40%24%24@manjeet.jihoesr.mongodb.net/major";
+
 
 app.get("/", (req, res) => {
   res.send("hello")
